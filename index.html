@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html ng-app="DictApp">
+<head >
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Dictionary App with Angular and DictionaryApi ver.1</title>
+ 
+	<script src="../assets/js/angular.min.js"></script>
+	<script src="js/xml2json.js"></script>
+    <style type="text/css">
+    
+        @media screen and (max-width: 1680px) {
+            .main{
+                width:1500px;
+            }
+        }
+        @media screen and (max-width: 1280px) {
+            .main{
+                width:1000px;
+            }  
+        }
+        @media screen and (max-width: 768px) {
+            .main{
+                width:700px;
+            }
+             input[type=text] {
+                width:60% !important;
+            }
+         }
+
+        @media screen and (max-width: 340px) {
+            .main{
+                width:340px;
+                text-align:center;
+            }
+            button,input[type=text] {
+                width:90% !important;
+            }
+         }
+        
+        @media screen and (max-width: 412px)  {
+            .main{
+                width:420px;
+                text-align:center;
+            }
+            button,input[type=text] {
+                width:90% !important;
+            }
+         }
+
+        ul.listNum{
+            list-style-type:decimal;
+        }
+        .main{
+            width:100%;
+            margin: 20px auto;
+        }
+
+        button , input[type=text] {
+            cursor:pointer;
+            border:none;
+            background: #021E5D;
+            color:#FFF;
+            margin:0 0 5px;
+            padding:5px;
+            border-radius:5px;
+            font-size:1.3em;
+        }
+        button{
+            font-size:1em;
+            min-height: 2em;  
+            width:10%;
+        }
+        button.clearSt{
+            background: red;
+        }
+        input[type=text] {
+            width: 70%;
+            padding: 5px 12px;
+            font-size: 12px;
+            line-height: 1.4;
+            color: #555;
+            background:white;
+            border: 1px solid #ccc;
+            font-size:1em;
+        }
+
+    </style>
+</head>
+<body>
+	<div class="main" ng-controller="MainCtrl" >
+		<input type="text" ng-model="searchWord"  ng-keypress="($event.which === 13)?loadFeed():0" placeholder="Search Word...."  />
+		<button ng-click="loadFeed()" >Search</button>
+        <button ng-click="clear()" class="clearSt" >clear</button>
+		<div ng-repeat="entry in entries" ng-if="entries.length" >
+			<p >
+			<strong>{{entry.ew}} </strong> (<i>{{entry.fl}}</i>) <span ng-if="entry.pr"> - ({{entry.pr}}) </span>
+			
+			 <ul class="listNum"> 
+				<li ng-repeat="def  in entry.def"  ng-show="def">
+					<p>{{def.label}}</p>
+				</li>
+			</ul>
+			</p>
+		</div>
+		<div ng-show="entries.length<=0 && searchFound" >
+			<p>no record found</p>
+			<div ng-if="suggestions.length">
+				<p>:: find more suggestions</p>
+				<ul  class="listNum" >
+					<li ng-repeat="suggestion in suggestions" > <a href="" ng-click="suggest(suggestion)"> {{suggestion}}</a></li>
+				</ul>
+			</div>
+		</div>
+		<span ng-show="histories.length>=1" >
+			<hr />
+			last searched words:
+			<span  ng-repeat="history in histories" >
+				 <a href="" ng-click="suggest(history)"> {{history}}</a> | 
+			</span>
+		</span>
+	</div>
+	<script src="js/app.js" ></script>
+</body>
+</html>
